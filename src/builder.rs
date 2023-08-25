@@ -1,23 +1,22 @@
 use crate::{
     consts::{GRID_SIZE, WEEKS},
-    state::{State, StateMap},
+    state::StateMap,
 };
 use chrono::Datelike;
 
 pub fn build_dates() -> StateMap {
     let mut map = StateMap::default();
     let now = chrono::Local::now().date_naive();
-    let now = now + chrono::Duration::days(now.weekday().num_days_from_monday() as i64 - 1);
+    let now = now + chrono::Duration::days(now.weekday().num_days_from_monday() as i64 - 1)
+        - chrono::Duration::days(GRID_SIZE as i64);
 
-    for y in 0..7 {
-        for x in 0..(WEEKS + 1) {
-            map.0[x * 7 + y] = State(
-                now - chrono::Duration::days(GRID_SIZE as i64)
-                    + chrono::Duration::weeks(x as i64)
-                    + chrono::Duration::days(y as i64 + 1),
-                false,
-            );
-        }
+    let mut i = 0;
+    for x in &mut map.0 {
+        x.0 = now
+            + chrono::Duration::weeks(i % (WEEKS + 1) as i64)
+            + chrono::Duration::days(i / (WEEKS + 1) as i64 % 7 as i64 - 1);
+        x.1 = false;
+        i += 1;
     }
 
     map
