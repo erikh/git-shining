@@ -101,7 +101,6 @@ pub fn build_grid(grid: StateMap) -> String {
     res
 }
 
-#[allow(dead_code)]
 pub fn generate_json_grid() -> String {
     let mut res = String::from("[");
     for y in 0..7 {
