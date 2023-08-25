@@ -103,14 +103,14 @@ pub fn build_grid(grid: StateMap) -> String {
 
 pub fn generate_json_grid() -> String {
     let mut res = String::from("[");
-    for y in 0..7 {
-        res += "\n";
-        for x in 0..(WEEKS + 1) {
-            res += r#""f""#;
 
-            if (y * x) < GRID_SIZE - 1 {
-                res += ",";
-            }
+    for x in 0..GRID_SIZE {
+        if x % (WEEKS + 1) == 0 {
+            res += "\n";
+        }
+        res += r#""f""#;
+        if x < GRID_SIZE - 1 {
+            res += ",";
         }
     }
     res += "\n]";
