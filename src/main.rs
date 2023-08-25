@@ -3,32 +3,44 @@ mod config;
 mod consts;
 mod state;
 
+use std::{path::PathBuf, str::FromStr};
+
 use crate::{
-    builder::build_grid,
+    builder::{build_grid, generate_json_grid},
     config::Config,
-    consts::{GRID_SIZE, WEEKS},
 };
-
-#[allow(dead_code)]
-fn generate_json_grid() -> String {
-    let mut res = String::from("[");
-    for y in 0..7 {
-        res += "\n";
-        for x in 0..(WEEKS + 1) {
-            res += r#""f""#;
-
-            if (y * x) < GRID_SIZE - 1 {
-                res += ",";
-            }
-        }
-    }
-    res += "\n]";
-    res
+use clap::{Parser, Subcommand};
+#[derive(Parser, Debug)]
+#[command(
+    author = "Erik Hollensbe <erik+github@hollensbe.org>",
+    version,
+    about = "Generate art from Github Contributor Graphs"
+)]
+#[command(propagate_version = true)]
+struct ArgParser {
+    #[command(subcommand)]
+    command: Command,
+}
+#[derive(Debug, Subcommand)]
+enum Command {
+    #[command(alias = "b", about = "Also `b`. Build the graph and export as HTML")]
+    Build { filename: Option<PathBuf> },
+    #[command(about = "Generate a configuration file to edit to stdout")]
+    GenerateConfig,
 }
 
 fn main() -> Result<(), anyhow::Error> {
-    let res: Config = serde_json::from_str(&std::fs::read_to_string("config.json")?)?;
-    println!("{}", build_grid(res.to_grid()?));
-    //    println!("{}", generate_json_grid());
+    let cli = ArgParser::parse();
+    match cli.command {
+        Command::Build { filename } => {
+            let res: Config = serde_json::from_str(&std::fs::read_to_string(
+                filename.unwrap_or(PathBuf::from_str("config.json")?),
+            )?)?;
+            println!("{}", build_grid(res.to_grid()?));
+        }
+        Command::GenerateConfig => {
+            println!("{}", generate_json_grid());
+        }
+    }
     Ok(())
 }
