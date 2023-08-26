@@ -1,6 +1,7 @@
 mod builder;
 mod config;
 mod consts;
+mod fonts;
 mod state;
 
 use std::{path::PathBuf, str::FromStr};
