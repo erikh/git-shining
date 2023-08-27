@@ -12,9 +12,10 @@ pub fn build_dates() -> StateMap {
 
     let mut i = 0;
     for x in &mut map.0 {
-        x.0 = now
+        x.0 = (now
             + chrono::Duration::weeks(i % WEEKS as i64)
-            + chrono::Duration::days(i / WEEKS as i64 % DAYS as i64 - 1);
+            + chrono::Duration::days(i / WEEKS as i64 % DAYS as i64 - 1))
+        .into();
         x.1 = 0;
         i += 1;
     }
@@ -207,14 +208,16 @@ pub fn build_grid(grid: StateMap) -> String {
     res
 }
 
-pub fn generate_json_grid() -> String {
+pub fn generate_json_grid(state: StateMap) -> String {
     let mut res = String::from("[");
 
     for x in 0..GRID_SIZE {
         if x % WEEKS == 0 {
             res += "\n";
         }
-        res += r#"0"#;
+
+        res += &format!("{}", state.0[x].1);
+
         if x < GRID_SIZE - 1 {
             res += ",";
         }
