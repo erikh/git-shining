@@ -1,5 +1,5 @@
 use crate::{
-    consts::{GRID_SIZE, PIXEL_HEIGHT, PIXEL_WIDTH, WEEKS},
+    consts::{GRID_SIZE, PIXEL_HEIGHT, PIXEL_WIDTH},
     state::StateMap,
 };
 use anyhow::anyhow;
