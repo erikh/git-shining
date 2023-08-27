@@ -101,7 +101,10 @@ fn main() -> Result<(), anyhow::Error> {
             );
         }
         Command::BuildPlan { input } => {
-            serde_json::to_string(&Config::from_path(input)?.to_grid()?)?;
+            println!(
+                "{}",
+                serde_json::to_string(&Config::from_path(input)?.to_grid()?)?
+            );
         }
     }
     Ok(())
