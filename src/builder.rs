@@ -29,7 +29,43 @@ pub fn build_grid(grid: StateMap) -> String {
 <html>
 <head>
   <style>
-    .filled:hover .tooltip {
+    .filled100:hover .tooltip {
+      display: block;
+    }
+
+    .filled90:hover .tooltip {
+      display: block;
+    }
+
+    .filled80:hover .tooltip {
+      display: block;
+    }
+
+    .filled70:hover .tooltip {
+      display: block;
+    }
+
+    .filled60:hover .tooltip {
+      display: block;
+    }
+
+    .filled50:hover .tooltip {
+      display: block;
+    }
+
+    .filled40:hover .tooltip {
+      display: block;
+    }
+
+    .filled30:hover .tooltip {
+      display: block;
+    }
+
+    .filled20:hover .tooltip {
+      display: block;
+    }
+
+    .filled10:hover .tooltip {
       display: block;
     }
 

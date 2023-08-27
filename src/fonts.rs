@@ -1,5 +1,5 @@
 use crate::{
-    consts::{GRID_SIZE, PIXEL_HEIGHT, PIXEL_WIDTH},
+    consts::{GRID_SIZE, PIXEL_HEIGHT, PIXEL_WIDTH, WEEKS},
     state::StateMap,
 };
 use anyhow::anyhow;
@@ -39,8 +39,9 @@ pub fn render_font(
             g.draw(|x, y, v| {
                 let x = x as i32 + bb.min.x;
                 let y = y as i32 + bb.min.y;
-                if x >= 0 && x < width as i32 && y >= 0 && y < PIXEL_HEIGHT as i32 {
-                    map.0[x as usize + y as usize * width].1 = (v * 10.0).ceil() as u8;
+                if x >= 0 && x < WEEKS as i32 && y >= 0 && y < PIXEL_HEIGHT as i32 {
+                    let result = (v * 10.0).ceil() as u8;
+                    map.0[x as usize + y as usize * WEEKS].1 = result;
                 }
             })
         }
