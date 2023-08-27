@@ -9,7 +9,6 @@ This program turns your contributor graph into a work of art by filing commits w
 
 Best to create or use a burner account for this; this is not for your main account.
 
--   Your account must be at least a year old
 -   You must have no other activity for the year, which includes pull requests, issue comments, etc.
 -   You must only have one repository recording commits for the year, and it must be all commits related to your message.
 
