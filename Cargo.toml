@@ -2,6 +2,11 @@
 name = "git-shining"
 version = "0.1.0"
 edition = "2021"
+description = "Create art out of a yearly GitHub contribution graph"
+authors = ["Erik Hollensbe <erik+github@hollensbe.org>"]
+license = "MIT"
+homepage = "https://github.com/erikh/git-shining"
+repository = "https://github.com/erikh/git-shining"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
