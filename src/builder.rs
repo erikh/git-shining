@@ -6,13 +6,12 @@ use chrono::Datelike;
 
 pub fn build_dates() -> StateMap {
     let mut map = StateMap::default();
-    let now = chrono::Local::now().date_naive();
-    let now = now + chrono::Duration::days(now.weekday().num_days_from_monday() as i64 - 1)
-        - chrono::Duration::days(GRID_SIZE as i64);
+    let then = chrono::Local::now().date_naive() - chrono::Duration::days(GRID_SIZE as i64);
+    let then = then - chrono::Duration::days(then.weekday().num_days_from_monday() as i64 - 14);
 
     let mut i = 0;
     for x in &mut map.0 {
-        x.0 = (now
+        x.0 = (then
             + chrono::Duration::weeks(i % WEEKS as i64)
             + chrono::Duration::days(i / WEEKS as i64 % DAYS as i64 - 1))
         .into();
