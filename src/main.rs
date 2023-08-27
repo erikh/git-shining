@@ -2,6 +2,7 @@ mod builder;
 mod config;
 mod consts;
 mod fonts;
+mod git;
 mod state;
 
 use std::{path::PathBuf, str::FromStr};

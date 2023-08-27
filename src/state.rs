@@ -7,6 +7,12 @@ use serde_derive::{Deserialize, Serialize};
 #[derive(Debug, Clone, Default)]
 pub struct Date(chrono::NaiveDate);
 
+impl Into<chrono::NaiveDate> for Date {
+    fn into(self) -> chrono::NaiveDate {
+        self.0.clone()
+    }
+}
+
 impl From<chrono::NaiveDate> for Date {
     fn from(value: chrono::NaiveDate) -> Self {
         Self(value)
