@@ -11,6 +11,7 @@ use crate::{
     builder::{build_grid, generate_json_grid, generate_txt_grid},
     config::Config,
     fonts::render_font,
+    git::GeneratedRepository,
     state::StateMap,
 };
 use anyhow::anyhow;
@@ -42,6 +43,18 @@ enum Command {
     },
     #[command(about = "Build a change plan from a configuration")]
     BuildPlan { input: Option<PathBuf> },
+    #[command(about = "Generate a repository for pushing, given a configuration")]
+    GenerateRepository {
+        target_path: PathBuf,
+        #[arg(short = 'm', long = "message", help = "Customize the commit message")]
+        message: Option<String>,
+        #[arg(
+            short = 'i',
+            long = "input",
+            help = "Specify the input file; `config.json` by default"
+        )]
+        input: Option<PathBuf>,
+    },
 }
 
 #[derive(Debug, ValueEnum, Clone)]
@@ -106,6 +119,20 @@ fn main() -> Result<(), anyhow::Error> {
                 "{}",
                 serde_json::to_string(&Config::from_path(input)?.to_grid()?)?
             );
+        }
+        Command::GenerateRepository {
+            target_path,
+            input,
+            message,
+        } => {
+            let map: StateMap = Config::from_path(input)?.to_grid()?;
+            let mut repo = GeneratedRepository::new(target_path.clone(), map);
+            if let Some(message) = message {
+                repo.set_message(message);
+            }
+            repo.init_repository()?;
+            repo.run()?;
+            println!("Repository generated at '{}'", target_path.display());
         }
     }
     Ok(())

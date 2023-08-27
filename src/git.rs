@@ -1,13 +1,16 @@
 #![allow(dead_code)]
 use crate::state::StateMap;
 use anyhow::anyhow;
-use std::{io::Write, path::PathBuf, sync::Arc};
+use std::{path::PathBuf, sync::Arc};
+
+const DEFAULT_MESSAGE: &str = "I am a work of art";
 
 pub struct GeneratedRepository {
     path: PathBuf,
     map: StateMap,
     index: usize,
     repository: Option<Arc<git2::Repository>>,
+    msg: Option<String>,
 }
 
 impl GeneratedRepository {
@@ -17,11 +20,29 @@ impl GeneratedRepository {
             map,
             index: 0,
             repository: None,
+            msg: None,
         }
+    }
+
+    pub fn set_message(&mut self, msg: String) {
+        self.msg = Some(msg)
     }
 
     pub fn init_repository(&mut self) -> Result<(), anyhow::Error> {
         self.repository = Some(Arc::new(git2::Repository::init(self.path.clone())?));
+
+        let repo = self.repository.clone().unwrap();
+        let signature = git2::Signature::new("test", "test@example.com", &git2::Time::new(0, 0))?;
+        let oid = repo.index().unwrap().write_tree().unwrap();
+        let tree = repo.find_tree(oid).unwrap();
+        repo.commit(
+            Some("HEAD"),
+            &signature,
+            &signature,
+            &self.msg.clone().unwrap_or(DEFAULT_MESSAGE.to_string()),
+            &tree,
+            &[],
+        )?;
         Ok(())
     }
 
@@ -56,18 +77,7 @@ impl GeneratedRepository {
         self.has_repository()?;
 
         let repo = self.repository.clone().unwrap();
-        let parents = repo
-            .head()?
-            .peel_to_commit()
-            .map_or(None, |s| Some(s.parent(1).map_or(Vec::new(), |s| vec![s])));
-
-        let parents = parents.unwrap_or(Vec::new());
-        let parents = parents
-            .iter()
-            .map(|s| s)
-            .collect::<Vec<&git2::Commit<'_>>>();
-
-        let parents = parents.as_slice();
+        let parent = repo.head()?.peel_to_commit()?;
 
         let signature = git2::Signature::new(
             "test",
@@ -86,10 +96,6 @@ impl GeneratedRepository {
         let oid = repo.index().unwrap().write_tree().unwrap();
         let tree = repo.find_tree(oid).unwrap();
 
-        let mut f = std::fs::File::create("token").unwrap();
-        f.write_all(format!("{}", rand::random::<u64>()).as_bytes())?;
-        drop(f);
-
         let mut index = repo.index()?;
         index.add_all(&["."], git2::IndexAddOption::DEFAULT, None)?;
         index.write()?;
@@ -98,9 +104,9 @@ impl GeneratedRepository {
             Some("HEAD"),
             &signature,
             &signature,
-            "Initial commit",
+            &self.msg.clone().unwrap_or(DEFAULT_MESSAGE.to_string()),
             &tree,
-            parents,
+            &[&parent],
         )?;
 
         Ok(())
