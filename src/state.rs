@@ -1,5 +1,5 @@
 #[derive(Debug, Clone, Default)]
-pub struct State(pub chrono::NaiveDate, pub bool);
+pub struct State(pub chrono::NaiveDate, pub u8);
 
 #[derive(Debug)]
 pub struct StateMap(pub Vec<State>);

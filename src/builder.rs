@@ -1,5 +1,5 @@
 use crate::{
-    consts::{GRID_SIZE, WEEKS},
+    consts::{DAYS, GRID_SIZE, WEEKS},
     state::StateMap,
 };
 use chrono::Datelike;
@@ -13,9 +13,9 @@ pub fn build_dates() -> StateMap {
     let mut i = 0;
     for x in &mut map.0 {
         x.0 = now
-            + chrono::Duration::weeks(i % (WEEKS + 1) as i64)
-            + chrono::Duration::days(i / (WEEKS + 1) as i64 % 7 as i64 - 1);
-        x.1 = false;
+            + chrono::Duration::weeks(i % WEEKS as i64)
+            + chrono::Duration::days(i / WEEKS as i64 % DAYS as i64 - 1);
+        x.1 = 0;
         i += 1;
     }
 
@@ -48,9 +48,72 @@ pub fn build_grid(grid: StateMap) -> String {
       height: 1.5em;
     }
 
-    .filled {
+    .filled100 {
       border: 1px solid black;
       background-color: black;
+      height: 10px;
+      width: 10px;
+    }
+
+    .filled10 {
+      border: 1px solid #EEEEEE;
+      background-color: #EEEEEE;
+      height: 10px;
+      width: 10px;
+    }
+
+    .filled20 {
+      border: 1px solid #CCCCCC;
+      background-color: #CCCCCC;
+      height: 10px;
+      width: 10px;
+    }
+
+    .filled30 {
+      border: 1px solid #AAAAAA;
+      background-color: #AAAAAA;
+      height: 10px;
+      width: 10px;
+    }
+
+    .filled40 {
+      border: 1px solid #999999;
+      background-color: #999999;
+      height: 10px;
+      width: 10px;
+    }
+
+    .filled50 {
+      border: 1px solid #777777;
+      background-color: #777777;
+      height: 10px;
+      width: 10px;
+    }
+
+    .filled60 {
+      border: 1px solid #666666;
+      background-color: #666666;
+      height: 10px;
+      width: 10px;
+    }
+
+    .filled70 {
+      border: 1px solid #444444;
+      background-color: #444444;
+      height: 10px;
+      width: 10px;
+    }
+
+    .filled80 {
+      border: 1px solid #333333;
+      background-color: #333333;
+      height: 10px;
+      width: 10px;
+    }
+
+    .filled90 {
+      border: 1px solid #222222;
+      background-color: #222222;
       height: 10px;
       width: 10px;
     }
@@ -69,23 +132,30 @@ pub fn build_grid(grid: StateMap) -> String {
 
     let mut i = 0;
     for x in &grid.0 {
-        if i % (WEEKS + 1) == 0 {
+        if i % WEEKS == 0 {
             res += "<tr>";
         }
 
-        if x.1 {
-            res += &format!(
-                r#"<td class="filled"><span class="tooltip">{}</span></td>"#,
-                x.0
-            );
-        } else {
-            res += &format!(
-                r#"<td class="empty"><span class="tooltip">{}</span></td>"#,
-                x.0
-            );
-        }
+        let class = match x.1 {
+            10 => "filled100",
+            9 => "filled90",
+            8 => "filled80",
+            7 => "filled70",
+            6 => "filled60",
+            5 => "filled50",
+            4 => "filled40",
+            3 => "filled30",
+            2 => "filled20",
+            1 => "filled10",
+            _ => "empty",
+        };
 
-        if i % (WEEKS + 1) == WEEKS {
+        res += &format!(
+            r#"<td class="{}"><span class="tooltip">{}</span></td>"#,
+            class, x.0
+        );
+
+        if i % WEEKS == WEEKS - 1 {
             res += "</tr>";
         }
 
@@ -105,10 +175,10 @@ pub fn generate_json_grid() -> String {
     let mut res = String::from("[");
 
     for x in 0..GRID_SIZE {
-        if x % (WEEKS + 1) == 0 {
+        if x % WEEKS == 0 {
             res += "\n";
         }
-        res += r#""f""#;
+        res += r#"0"#;
         if x < GRID_SIZE - 1 {
             res += ",";
         }

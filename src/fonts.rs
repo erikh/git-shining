@@ -1,4 +1,7 @@
-use crate::state::StateMap;
+use crate::{
+    consts::{GRID_SIZE, PIXEL_HEIGHT, PIXEL_WIDTH, WEEKS},
+    state::StateMap,
+};
 use anyhow::anyhow;
 use rusttype::{point, Font, Scale};
 use std::path::PathBuf;
@@ -9,7 +12,10 @@ pub fn render_font(
     mut map: StateMap,
 ) -> Result<StateMap, anyhow::Error> {
     let font = load_font(font)?;
-    let scale = Scale { x: 5.0, y: 7.0 };
+    let scale = Scale {
+        x: PIXEL_WIDTH as f32,
+        y: PIXEL_HEIGHT as f32,
+    };
     let metrics = font.v_metrics(scale);
     let offset = point(0.0, metrics.ascent);
 
@@ -24,7 +30,22 @@ pub fn render_font(
         .unwrap_or(0.0)
         .ceil() as usize;
 
-    println!("width: {}, height: {}", width, 7);
+    if width * PIXEL_HEIGHT > GRID_SIZE {
+        return Err(anyhow!("cannot fit into grid"));
+    }
+
+    for g in glyphs {
+        if let Some(bb) = g.pixel_bounding_box() {
+            g.draw(|x, y, v| {
+                let x = x as i32 + bb.min.x;
+                let y = y as i32 + bb.min.y;
+                if x >= 0 && x < width as i32 && y >= 0 && y < PIXEL_HEIGHT as i32 {
+                    let result = (v * 10.0).ceil() as u8;
+                    map.0[x as usize + y as usize * width].1 = result;
+                }
+            })
+        }
+    }
 
     Ok(map)
 }

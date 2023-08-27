@@ -3,7 +3,7 @@ use anyhow::anyhow;
 use serde_derive::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Config(pub Vec<String>);
+pub struct Config(pub Vec<u8>);
 
 impl Config {
     fn valid(&self) -> Result<(), anyhow::Error> {
@@ -20,7 +20,7 @@ impl Config {
 
         let mut i = 0;
         for x in &mut dates.0 {
-            x.1 = self.0[i].trim() == "t";
+            x.1 = self.0[i];
             i += 1;
         }
 

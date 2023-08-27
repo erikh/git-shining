@@ -9,8 +9,11 @@ use std::{path::PathBuf, str::FromStr};
 use crate::{
     builder::{build_grid, generate_json_grid},
     config::Config,
+    fonts::render_font,
 };
+use builder::build_dates;
 use clap::{Parser, Subcommand};
+use state::StateMap;
 #[derive(Parser, Debug)]
 #[command(
     author = "Erik Hollensbe <erik+github@hollensbe.org>",
@@ -25,9 +28,15 @@ struct ArgParser {
 #[derive(Debug, Subcommand)]
 enum Command {
     #[command(alias = "b", about = "Also `b`. Build the graph and export as HTML")]
-    Build { filename: Option<PathBuf> },
+    Build {
+        filename: Option<PathBuf>,
+    },
     #[command(about = "Generate a configuration file to edit to stdout")]
     GenerateConfig,
+    RenderFont {
+        font: String,
+        message: String,
+    },
 }
 
 fn main() -> Result<(), anyhow::Error> {
@@ -41,6 +50,16 @@ fn main() -> Result<(), anyhow::Error> {
         }
         Command::GenerateConfig => {
             println!("{}", generate_json_grid());
+        }
+        Command::RenderFont { font, message } => {
+            println!(
+                "{}",
+                build_grid(render_font(
+                    &message,
+                    PathBuf::from_str(&font)?,
+                    build_dates(),
+                )?)
+            );
         }
     }
     Ok(())
