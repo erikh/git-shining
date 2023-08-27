@@ -225,3 +225,22 @@ pub fn generate_json_grid(state: StateMap) -> String {
     res += "\n]";
     res
 }
+
+pub fn generate_txt_grid(state: StateMap) -> String {
+    let mut res = String::new();
+
+    for x in 0..GRID_SIZE {
+        if x % WEEKS == 0 && x != 0 {
+            res += "\n";
+        }
+
+        let mut s = state.0[x].1.to_string();
+        if state.0[x].1 == 10 {
+            s = "A".to_string();
+        }
+
+        res += &s;
+    }
+
+    res
+}
