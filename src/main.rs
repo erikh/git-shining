@@ -46,6 +46,10 @@ enum Command {
     #[command(about = "Generate a repository for pushing, given a configuration")]
     GenerateRepository {
         target_path: PathBuf,
+        #[arg(short = 'a', long = "author", help = "Customize the author name")]
+        author: Option<String>,
+        #[arg(short = 'e', long = "email", help = "Customize the author email")]
+        email: Option<String>,
         #[arg(short = 'm', long = "message", help = "Customize the commit message")]
         message: Option<String>,
         #[arg(
@@ -124,12 +128,24 @@ fn main() -> Result<(), anyhow::Error> {
             target_path,
             input,
             message,
+            author,
+            email,
         } => {
             let map: StateMap = Config::from_path(input)?.to_grid()?;
             let mut repo = GeneratedRepository::new(target_path.clone(), map);
+
             if let Some(message) = message {
                 repo.set_message(message);
             }
+
+            if let Some(author) = author {
+                repo.set_author(author);
+            }
+
+            if let Some(email) = email {
+                repo.set_email(email);
+            }
+
             repo.init_repository()?;
             repo.run()?;
             println!("Repository generated at '{}'", target_path.display());

@@ -4,6 +4,8 @@ use anyhow::anyhow;
 use std::{path::PathBuf, sync::Arc};
 
 const DEFAULT_MESSAGE: &str = "I am a work of art";
+const DEFAULT_AUTHOR: &str = "Anonymous";
+const DEFAULT_EMAIL: &str = "wearelegion@example.org";
 
 pub struct GeneratedRepository {
     path: PathBuf,
@@ -11,6 +13,8 @@ pub struct GeneratedRepository {
     index: usize,
     repository: Option<Arc<git2::Repository>>,
     msg: Option<String>,
+    author: Option<String>,
+    email: Option<String>,
 }
 
 impl GeneratedRepository {
@@ -21,6 +25,8 @@ impl GeneratedRepository {
             index: 0,
             repository: None,
             msg: None,
+            author: None,
+            email: None,
         }
     }
 
@@ -28,11 +34,21 @@ impl GeneratedRepository {
         self.msg = Some(msg)
     }
 
+    pub fn set_author(&mut self, author: String) {
+        self.author = Some(author)
+    }
+
+    pub fn set_email(&mut self, email: String) {
+        self.email = Some(email)
+    }
+
     pub fn init_repository(&mut self) -> Result<(), anyhow::Error> {
         self.repository = Some(Arc::new(git2::Repository::init(self.path.clone())?));
 
         let repo = self.repository.clone().unwrap();
-        let signature = git2::Signature::new("test", "test@example.com", &git2::Time::new(0, 0))?;
+        let author = &self.author.clone().unwrap_or(DEFAULT_AUTHOR.to_string());
+        let email = &self.email.clone().unwrap_or(DEFAULT_EMAIL.to_string());
+        let signature = git2::Signature::new(author, email, &git2::Time::new(0, 0))?;
         let oid = repo.index().unwrap().write_tree().unwrap();
         let tree = repo.find_tree(oid).unwrap();
         repo.commit(
@@ -79,9 +95,12 @@ impl GeneratedRepository {
         let repo = self.repository.clone().unwrap();
         let parent = repo.head()?.peel_to_commit()?;
 
+        let author = &self.author.clone().unwrap_or(DEFAULT_AUTHOR.to_string());
+        let email = &self.email.clone().unwrap_or(DEFAULT_EMAIL.to_string());
+
         let signature = git2::Signature::new(
-            "test",
-            "test@example.com",
+            author,
+            email,
             &git2::Time::new(
                 (date.and_hms_opt(0, 0, 0).unwrap()
                     - chrono::NaiveDateTime::new(
