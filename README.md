@@ -13,6 +13,7 @@ Best to create or use a burner account for this; this is not for your main accou
 
 -   You must have no other activity for the year, which includes pull requests, issue comments, etc.
 -   You must only have one repository recording commits for the year, and it must be all commits related to your message.
+-   GitHub will let you back-date your commits to 1970/1/1 so be sure to use the `--origin` option if you want to exploit that.
 
 ## Usage
 
