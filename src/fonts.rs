@@ -40,8 +40,7 @@ pub fn render_font(
                 let x = x as i32 + bb.min.x;
                 let y = y as i32 + bb.min.y;
                 if x >= 0 && x < WEEKS as i32 && y >= 0 && y < PIXEL_HEIGHT as i32 {
-                    let result = (v * 10.0).ceil() as u8;
-                    map.0[x as usize + y as usize * WEEKS].1 = result;
+                    map.0[x as usize + y as usize * WEEKS].1 = (v * 10.0).floor() as u8;
                 }
             })
         }
