@@ -5,6 +5,8 @@ This program turns your contributor graph into a work of art by filing commits w
 <p><center><img src="heart.png" /></center></p>
 <p><center><img src="font.png" /></center></p>
 
+Or [here](https://github.com/erikh?tab=overview&from=1978-12-01&to=1978-12-31) if you want a more in-your-face example.
+
 ## Constraints
 
 Best to create or use a burner account for this; this is not for your main account.
