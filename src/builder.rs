@@ -4,10 +4,12 @@ use crate::{
 };
 use chrono::Datelike;
 
-pub fn build_dates() -> StateMap {
+pub fn build_dates(origin: Option<chrono::NaiveDate>) -> StateMap {
     let mut map = StateMap::default();
-    let then = chrono::Local::now().date_naive() - chrono::Duration::days(GRID_SIZE as i64);
-    let then = then - chrono::Duration::days(then.weekday().num_days_from_monday() as i64 - 14);
+    let then = origin.unwrap_or_else(|| {
+        chrono::Local::now().date_naive() - chrono::Duration::days(GRID_SIZE as i64)
+    });
+    let then = then + chrono::Duration::days(then.weekday().num_days_from_monday() as i64 * -1);
 
     let mut i = 0;
     for x in &mut map.0 {

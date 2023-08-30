@@ -32,17 +32,27 @@ struct ArgParser {
 #[derive(Debug, Subcommand)]
 enum Command {
     #[command(alias = "b", about = "Also `b`. Build the graph and export as HTML")]
-    Build { filename: Option<PathBuf> },
+    Build {
+        #[arg(short = 'o', long = "origin", help = "Set the origin date")]
+        origin: Option<chrono::NaiveDate>,
+        filename: Option<PathBuf>,
+    },
     #[command(about = "Generate a configuration file to edit to stdout")]
     GenerateConfig { format: ConfigFormat },
     #[command(about = "Render a graph from a font and message to configuration")]
     RenderFont {
+        #[arg(short = 'o', long = "origin", help = "Set the origin date")]
+        origin: Option<chrono::NaiveDate>,
         font: String,
         message: String,
         format: Option<ConfigFormat>,
     },
     #[command(about = "Build a change plan from a configuration")]
-    BuildPlan { input: Option<PathBuf> },
+    BuildPlan {
+        #[arg(short = 'o', long = "origin", help = "Set the origin date")]
+        origin: Option<chrono::NaiveDate>,
+        input: Option<PathBuf>,
+    },
     #[command(about = "Generate a repository for pushing, given a configuration")]
     GenerateRepository {
         target_path: PathBuf,
@@ -52,6 +62,8 @@ enum Command {
         email: Option<String>,
         #[arg(short = 'm', long = "message", help = "Customize the commit message")]
         message: Option<String>,
+        #[arg(short = 'o', long = "origin", help = "Set the origin date")]
+        origin: Option<chrono::NaiveDate>,
         #[arg(
             short = 'i',
             long = "input",
@@ -92,8 +104,11 @@ impl ToString for ConfigFormat {
 fn main() -> Result<(), anyhow::Error> {
     let cli = ArgParser::parse();
     match cli.command {
-        Command::Build { filename } => {
-            println!("{}", build_grid(Config::from_path(filename)?.to_grid()?));
+        Command::Build { origin, filename } => {
+            println!(
+                "{}",
+                build_grid(Config::from_path(filename)?.to_grid(origin)?)
+            );
         }
         Command::GenerateConfig { format } => match format {
             ConfigFormat::Json => {
@@ -104,12 +119,13 @@ fn main() -> Result<(), anyhow::Error> {
             }
         },
         Command::RenderFont {
+            origin,
             font,
             message,
             format,
         } => {
             let format = format.unwrap_or(ConfigFormat::Json);
-            let map = render_font(&message, PathBuf::from_str(&font)?, build_dates())?;
+            let map = render_font(&message, PathBuf::from_str(&font)?, build_dates(origin))?;
             println!(
                 "{}",
                 match format {
@@ -118,20 +134,21 @@ fn main() -> Result<(), anyhow::Error> {
                 }
             );
         }
-        Command::BuildPlan { input } => {
+        Command::BuildPlan { origin, input } => {
             println!(
                 "{}",
-                serde_json::to_string(&Config::from_path(input)?.to_grid()?)?
+                serde_json::to_string(&Config::from_path(input)?.to_grid(origin)?)?
             );
         }
         Command::GenerateRepository {
+            origin,
             target_path,
             input,
             message,
             author,
             email,
         } => {
-            let map: StateMap = Config::from_path(input)?.to_grid()?;
+            let map: StateMap = Config::from_path(input)?.to_grid(origin)?;
             let mut repo = GeneratedRepository::new(target_path.clone(), map);
 
             if let Some(message) = message {

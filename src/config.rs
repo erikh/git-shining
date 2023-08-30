@@ -72,9 +72,9 @@ impl Config {
         Err(anyhow!("Invalid Size: must be {}", GRID_SIZE))
     }
 
-    pub fn to_grid(&self) -> Result<StateMap, anyhow::Error> {
+    pub fn to_grid(&self, origin: Option<chrono::NaiveDate>) -> Result<StateMap, anyhow::Error> {
         self.valid()?;
-        let mut dates = build_dates();
+        let mut dates = build_dates(origin);
 
         let mut i = 0;
         for x in &mut dates.0 {
