@@ -40,6 +40,8 @@ git-shining generate-repository -i bro.txt -e wearelegion@example.org -m "Sup Br
 
 After that, you can create your repository and upload it.
 
+If you want to generate repositories that start the graph at a certain date, look at the `--origin` options of `build` and `generate-repository`.
+
 ## Configuration Formats
 
 There are two formats for configuration: JSON and TXT.
@@ -57,7 +59,6 @@ The `generate-config` sub-command can generate both formats for hand-editing, an
 
 ## Future Plans
 
--   Set origin date of commits
 -   Marquee and Mural functionality
 
 ## Author
