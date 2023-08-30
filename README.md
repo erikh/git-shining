@@ -44,14 +44,13 @@ There are two formats for configuration: JSON and TXT.
 
 JSON is a JSON array of integers, from 0-10, which coordinate to shading in the graph (made possible by filing more commits for brighter shades). It is easy to consume, post-process, and generate, but a little hard to edit.
 
-TXT is an easier format to hand-edit. It is simply a well-aligned grid of integers, which you can set from 0-`A` (`A` is 10 here) to affects shading.
+TXT is an easier format to hand-edit. It is simply a well-aligned grid of integers, which you can set from 0-`A` (`A` is 10 here) to affect shading.
 
 The `generate-config` sub-command can generate both formats for hand-editing, and the `render-font` command has switches to modify target configuration output.
 
 ## Troubleshooting
 
 -   If you upload twice, you must fully delete the old repository and re-create it. Force pushes will not clear the graph.
--   There is no functionality (yet) to set the origin date, it just works off the current date.
 -   If you're wondering what your graph will look like before you push to GitHub, try the `build` sub-command which will generate a HTML mock of the graph you can load into your browser. You can hover over each square to get the expected date.
 
 ## Future Plans
