@@ -41,8 +41,6 @@ enum Command {
     GenerateConfig { format: ConfigFormat },
     #[command(about = "Render a graph from a font and message to configuration")]
     RenderFont {
-        #[arg(short = 'o', long = "origin", help = "Set the origin date")]
-        origin: Option<chrono::NaiveDate>,
         font: String,
         message: String,
         format: Option<ConfigFormat>,
@@ -119,13 +117,12 @@ fn main() -> Result<(), anyhow::Error> {
             }
         },
         Command::RenderFont {
-            origin,
             font,
             message,
             format,
         } => {
             let format = format.unwrap_or(ConfigFormat::Json);
-            let map = render_font(&message, PathBuf::from_str(&font)?, build_dates(origin))?;
+            let map = render_font(&message, PathBuf::from_str(&font)?, build_dates(None))?;
             println!(
                 "{}",
                 match format {
