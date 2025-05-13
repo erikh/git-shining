@@ -31,6 +31,10 @@ pub fn build_grid(grid: StateMap) -> String {
 <html>
 <head>
   <style>
+    body {
+      background-color: white;
+    }
+
     .filled100:hover .tooltip {
       display: block;
     }
@@ -86,72 +90,72 @@ pub fn build_grid(grid: StateMap) -> String {
       height: 1.5em;
     }
 
-    .filled100 {
-      border: 1px solid black;
-      background-color: black;
-      height: 10px;
-      width: 10px;
-    }
-
     .filled10 {
-      border: 1px solid #EEEEEE;
-      background-color: #EEEEEE;
+      border: 1px solid #A9A9A9;
+      background-color: #A9A9A9;
       height: 10px;
       width: 10px;
     }
 
     .filled20 {
-      border: 1px solid #CCCCCC;
-      background-color: #CCCCCC;
+      border: 1px solid #989898;
+      background-color: #989898;
       height: 10px;
       width: 10px;
     }
 
     .filled30 {
-      border: 1px solid #AAAAAA;
-      background-color: #AAAAAA;
+      border: 1px solid #878787;
+      background-color: #878787;
       height: 10px;
       width: 10px;
     }
 
     .filled40 {
-      border: 1px solid #999999;
-      background-color: #999999;
+      border: 1px solid #767676;
+      background-color: #767676;
       height: 10px;
       width: 10px;
     }
 
     .filled50 {
-      border: 1px solid #777777;
-      background-color: #777777;
+      border: 1px solid #656565;
+      background-color: #656565;
       height: 10px;
       width: 10px;
     }
 
     .filled60 {
-      border: 1px solid #666666;
-      background-color: #666666;
+      border: 1px solid #545454;
+      background-color: #545454;
       height: 10px;
       width: 10px;
     }
 
     .filled70 {
-      border: 1px solid #444444;
-      background-color: #444444;
+      border: 1px solid #434343;
+      background-color: #434343;
       height: 10px;
       width: 10px;
     }
 
     .filled80 {
-      border: 1px solid #333333;
-      background-color: #333333;
+      border: 1px solid #323232;
+      background-color: #323232;
       height: 10px;
       width: 10px;
     }
 
     .filled90 {
-      border: 1px solid #222222;
-      background-color: #222222;
+      border: 1px solid #212121;
+      background-color: #212121;
+      height: 10px;
+      width: 10px;
+    }
+
+    .filled100 {
+      border: 1px solid black;
+      background-color: black;
       height: 10px;
       width: 10px;
     }
